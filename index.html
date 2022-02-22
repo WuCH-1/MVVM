@@ -1,0 +1,23 @@
+<div id="mvvm-app">
+    <input id="myBtn" type="text" v-model="value">
+    <p>{{value}}<span>{{a}}</span></p>
+    <button v-on:click="sayHi">change model</button>
+</div>
+
+<script src="observer.js"></script>
+<script src="compile.js"></script>
+<script src="MVVM.js"></script>
+
+<script>
+    var vm = new Vue({
+        el:'#mvvm-app',
+        data:{
+            value:'hello World!'
+        },
+        methods:{
+            sayHi(){
+                this.word='Hi,everbody!'
+            }
+        }
+    })
+</script>
