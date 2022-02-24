@@ -11,6 +11,11 @@ const CompileUtil = {
             return pre[next]
         },vm.$data)
     },
+    getTextVal(vm,expr){
+        return expr.replace(/\{\{([^}]+)\}\}/g,(...arguments)=>{
+            return this.getVal(vm,arguments[1].trim())
+        })
+    },
     updater:{
         textUpdater(node,value){
             node.textContent = value
@@ -40,13 +45,13 @@ const CompileUtil = {
      */
     text(node,vm,text){
         let updateFn = this.updater['textUpdater']
-        let value = this.getVal(vm,text)
+        let value = this.getTextVal(vm,text)
         // let value = text.replace(/\{\{([^}]+)\}\}/g,(...argument)=>{
         //     return this.getVal(vm,arguments[1].trim())
         // })
         text.replace(/\{\{([^}]+)\}\}/g,(...arguments)=>{
             new Watcher(vm,arguments[1].trim(),(newValue)=>{
-                updateFn && updateFn(node,getVal(vm,newValue))
+                updateFn && updateFn(node, this.getTextVal(vm,newValue))
             })
         })
         updateFn && updateFn(node,value)
@@ -100,7 +105,7 @@ class Compile {
         Array.from(attrs).forEach((attr)=>{
             let attrName = attr.name
             if(this.isDirective(attrName)) {
-                let expr = attr.name
+                let expr = attr.value
                 let type = attrName.slice(2);
                 CompileUtil[type](node,this.vm,expr);
             }
